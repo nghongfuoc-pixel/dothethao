@@ -1,0 +1,102 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liên hệ — Hồng Phước</title>
+<meta name="description" content="Liên hệ Hồng Phước - cửa hàng đồ thể thao tại 1/31B Trường Chinh, Phường Đông Hưng Thuận, TP.HCM. Hotline 0983 523 925.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Liên hệ — Hồng Phước">
+<meta property="og:description" content="Địa chỉ 1/31B Trường Chinh, Phường Đông Hưng Thuận, TP.HCM. Hotline 0983 523 925.">
+<meta property="og:image" content="assets/products/sp2.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<div id="header"></div>
+
+<div class="page">
+  <h1 class="page-title">Liên hệ</h1>
+  <p class="page-subtitle">Cửa hàng HỒNG PHƯỚC luôn sẵn sàng hỗ trợ bạn.</p>
+
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="contact-icon" aria-hidden="true">☎</div>
+      <h4>Điện thoại</h4>
+      <p id="phone-display"></p>
+      <p style="color:var(--muted); font-size:0.85rem;" id="hours-display"></p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon" aria-hidden="true">✉</div>
+      <h4>Email</h4>
+      <p id="email-display"></p>
+      <p style="color:var(--muted); font-size:0.85rem;">Phản hồi trong 24 giờ</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon" aria-hidden="true">📍</div>
+      <h4>Địa chỉ</h4>
+      <p id="address-display"></p>
+      <a class="btn btn-primary btn-sm" id="maps-link" target="_blank" rel="noopener">Chỉ đường trên Google Maps</a>
+    </div>
+  </div>
+
+  <div class="contact-layout">
+    <div class="contact-card">
+      <h3>Bản đồ</h3>
+      <iframe id="map-frame" style="width:100%; height:280px; border:0; border-radius:8px;" loading="lazy"></iframe>
+    </div>
+    <div class="contact-card">
+      <h3>Gửi liên hệ nhanh</h3>
+      <form id="contact-form">
+        <div class="form-group">
+          <label>Tên của bạn *</label>
+          <input type="text" name="name" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" placeholder="ban@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Nội dung *</label>
+          <textarea name="message" rows="4" placeholder="Bạn cần hỗ trợ gì?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Gửi liên hệ</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="js/app.js"></script>
+<script>
+  renderHeader("lien-he.html");
+  renderFooter();
+
+  document.getElementById("phone-display").textContent = STORE.phone;
+  document.getElementById("hours-display").textContent = STORE.hours;
+  document.getElementById("email-display").textContent = STORE.email;
+  document.getElementById("address-display").textContent = STORE.address;
+
+  const mapsUrl = "https://www.google.com/maps?q=" + encodeURIComponent(STORE.mapsQuery);
+  document.getElementById("maps-link").href = mapsUrl;
+  document.getElementById("map-frame").src =
+    "https://www.google.com/maps?q=" + encodeURIComponent(STORE.mapsQuery) + "&output=embed";
+
+  document.getElementById("contact-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const message = {
+      name: form.get("name"),
+      email: form.get("email"),
+      message: form.get("message"),
+      createdAt: new Date().toISOString(),
+    };
+
+    // TODO: khi đã có Supabase, thay đoạn này bằng:
+    // await supabase.from('contact_messages').insert({...})
+    const messages = JSON.parse(localStorage.getItem("hp_messages") || "[]");
+    messages.push(message);
+    localStorage.setItem("hp_messages", JSON.stringify(messages));
+
+    e.target.reset();
+    showToast("Cảm ơn bạn! Chúng tôi sẽ phản hồi sớm.");
+  });
+</script>

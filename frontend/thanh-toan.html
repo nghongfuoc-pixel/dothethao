@@ -1,0 +1,98 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thanh toán — Hồng Phước</title>
+<meta name="description" content="Hoàn tất đặt hàng tại Hồng Phước - điền thông tin giao hàng để nhận sản phẩm nhanh chóng.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<div id="header"></div>
+
+<div class="page">
+  <h1 class="page-title">Thanh toán</h1>
+  <p class="page-subtitle">Vui lòng điền thông tin giao hàng.</p>
+
+  <div class="checkout-layout">
+    <div class="checkout-form">
+      <h3>Thông tin giao hàng</h3>
+      <form id="checkout-form">
+        <div class="form-group">
+          <label>Họ và tên *</label>
+          <input type="text" name="name" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="form-group">
+          <label>Số điện thoại *</label>
+          <input type="tel" name="phone" placeholder="0983523925" required>
+        </div>
+        <div class="form-group">
+          <label>Địa chỉ nhận hàng *</label>
+          <input type="text" name="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/TP" required>
+        </div>
+        <div class="form-group">
+          <label>Ghi chú (không bắt buộc)</label>
+          <textarea name="note" rows="3" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi tới..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Đặt hàng</button>
+      </form>
+    </div>
+
+    <div class="order-summary">
+      <h3>Đơn hàng</h3>
+      <div id="order-lines"></div>
+      <div class="cart-summary-row" style="margin-top:16px;">
+        <strong>Tổng cộng</strong>
+        <strong class="cart-summary-total" id="order-total"></strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="js/app.js"></script>
+<script>
+  renderHeader("thanh-toan.html");
+  renderFooter();
+
+  const cart = getCart();
+
+  loadProducts().then((products) => {
+    const map = Object.fromEntries(products.map((p) => [p.id, p]));
+
+    if (cart.length === 0) {
+      document.getElementById("order-lines").innerHTML = `<p>Giỏ hàng đang trống.</p>`;
+      document.getElementById("order-total").textContent = formatVND(0);
+      document.querySelector("#checkout-form button").disabled = true;
+      return;
+    }
+
+    const total = cart.reduce((sum, l) => sum + map[l.productId].price * l.qty, 0);
+    document.getElementById("order-lines").innerHTML = cart
+      .map((l) => `<div class="order-line"><span>${map[l.productId].name} x${l.qty}</span><span>${formatVND(map[l.productId].price * l.qty)}</span></div>`)
+      .join("");
+    document.getElementById("order-total").textContent = formatVND(total);
+  });
+
+  document.getElementById("checkout-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const order = {
+      customerName: form.get("name"),
+      phone: form.get("phone"),
+      address: form.get("address"),
+      note: form.get("note"),
+      items: getCart(),
+      createdAt: new Date().toISOString(),
+    };
+
+    // TODO: khi đã có Supabase, thay đoạn này bằng:
+    // await supabase.from('orders').insert({...}) rồi insert order_items tương ứng.
+    const orders = JSON.parse(localStorage.getItem("hp_orders") || "[]");
+    orders.push(order);
+    localStorage.setItem("hp_orders", JSON.stringify(orders));
+
+    localStorage.removeItem("hp_cart");
+    showToast("Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.");
+    setTimeout(() => (window.location.href = "index.html"), 1500);
+  });
+</script>

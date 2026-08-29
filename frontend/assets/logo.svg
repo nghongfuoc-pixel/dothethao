@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="96" fill="#0f1b2d" stroke="#e5484d" stroke-width="6"/>
+  <path d="M40 138 C 70 108, 130 108, 160 138" fill="none" stroke="#7fc93c" stroke-width="9" stroke-linecap="round"/>
+  <text x="100" y="104" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="72" fill="#ffffff">HP</text>
+  <text x="100" y="128" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="15" letter-spacing="2" fill="#9fb0c9">HỒNG PHƯỚC</text>
+</svg>

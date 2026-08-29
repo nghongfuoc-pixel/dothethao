@@ -1,0 +1,406 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quản trị sản phẩm — Hồng Phước</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<style>
+  .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  .admin-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+  .admin-table th, .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.9rem; }
+  .admin-table img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; }
+  .admin-actions button { margin-right: 6px; }
+  .login-box { max-width: 380px; margin: 80px auto; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center; z-index: 100;
+  }
+  .modal-box { background: #fff; border-radius: 12px; padding: 24px; width: 420px; max-width: 90vw; }
+  .hidden { display: none !important; }
+  .error-text { color: var(--red); font-size: 0.85rem; margin-top: 6px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .admin-tabs button {
+    padding: 8px 18px; border-radius: 999px; border: 1px solid var(--border);
+    background: #fff; font-weight: 600; cursor: pointer; font-size: 0.85rem;
+  }
+  .admin-tabs button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .status-select { padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; }
+  .order-items-list { margin: 0; padding-left: 16px; font-size: 0.82rem; color: var(--muted); }
+  .msg-cell { max-width: 260px; white-space: pre-wrap; }
+</style>
+
+<div id="header"></div>
+
+<div class="admin-wrap">
+
+  <div id="config-warning" class="hidden">
+    <div class="feature-card">
+      <h4>Chưa cấu hình Supabase</h4>
+      <p>Mở <code>frontend/js/app.js</code>, điền <code>SUPABASE_URL</code> và <code>SUPABASE_ANON_KEY</code>
+      (lấy trong Supabase &gt; Project Settings &gt; API), sau đó tải lại trang này.</p>
+    </div>
+  </div>
+
+  <div id="login-view" class="hidden">
+    <div class="login-box">
+      <h3>Đăng nhập quản trị</h3>
+      <form id="login-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input type="password" name="password" required>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Đăng nhập</button>
+        <div class="error-text" id="login-error"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="admin-view" class="hidden">
+    <div class="admin-header">
+      <div>
+        <h1 class="page-title">Quản trị Hồng Phước</h1>
+        <p class="page-subtitle" id="panel-subtitle">Thêm, sửa, xóa sản phẩm — thay đổi có hiệu lực ngay trên trang Sản phẩm.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary hidden" id="btn-add">+ Thêm sản phẩm</button>
+        <button class="btn btn-outline" id="btn-logout">Đăng xuất</button>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button data-tab="products" class="active">Sản phẩm</button>
+      <button data-tab="orders">Đơn hàng</button>
+      <button data-tab="messages">Liên hệ</button>
+    </div>
+
+    <div id="admin-error" class="error-text"></div>
+
+    <div id="panel-products">
+      <table class="admin-table">
+        <thead>
+          <tr><th>Ảnh</th><th>Tên</th><th>Nhóm hàng</th><th>Giá</th><th>Tồn kho</th><th></th></tr>
+        </thead>
+        <tbody id="product-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="panel-orders" class="hidden">
+      <table class="admin-table">
+        <thead>
+          <tr><th>#</th><th>Khách hàng</th><th>SĐT</th><th>Địa chỉ</th><th>Sản phẩm</th><th>Tổng tiền</th><th>Trạng thái</th><th>Thời gian</th></tr>
+        </thead>
+        <tbody id="orders-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="panel-messages" class="hidden">
+      <table class="admin-table">
+        <thead>
+          <tr><th>Tên</th><th>Email</th><th>Nội dung</th><th>Thời gian</th></tr>
+        </thead>
+        <tbody id="messages-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div id="modal-backdrop" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <h3 id="modal-title">Thêm sản phẩm</h3>
+    <form id="product-form">
+      <input type="hidden" name="id">
+      <div class="form-group">
+        <label>Tên sản phẩm *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Nhóm hàng *</label>
+        <select name="category_id" required></select>
+      </div>
+      <div class="form-group">
+        <label>Giá (VNĐ) *</label>
+        <input type="number" name="price" min="0" required>
+      </div>
+      <div class="form-group">
+        <label>Đường dẫn ảnh *</label>
+        <input type="text" name="image_url" placeholder="assets/products/spN.jpg" required>
+      </div>
+      <div class="form-group">
+        <label>Tồn kho</label>
+        <input type="number" name="stock" min="0" value="0">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="btn btn-primary btn-block">Lưu</button>
+        <button type="button" class="btn btn-outline btn-block" id="btn-cancel">Hủy</button>
+      </div>
+      <div class="error-text" id="form-error"></div>
+    </form>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="js/app.js"></script>
+<script>
+  renderHeader("admin.html");
+  renderFooter();
+
+  let categories = [];
+  let editingId = null;
+  let currentTab = "products";
+  const tabLoaded = { products: false, orders: false, messages: false };
+
+  const tabSubtitles = {
+    products: "Thêm, sửa, xóa sản phẩm — thay đổi có hiệu lực ngay trên trang Sản phẩm.",
+    orders: "Danh sách đơn hàng khách đã đặt qua trang Thanh toán.",
+    messages: "Danh sách tin nhắn khách gửi qua trang Liên hệ.",
+  };
+
+  function slugify(str) {
+    return str
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/đ/g, "d").replace(/Đ/g, "D")
+      .toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+
+  function isLoggedIn() {
+    return Boolean(sessionStorage.getItem("hp_admin_token"));
+  }
+
+  function showView() {
+    document.getElementById("config-warning").classList.toggle("hidden", supabaseEnabled());
+    document.getElementById("login-view").classList.toggle("hidden", !supabaseEnabled() || isLoggedIn());
+    document.getElementById("admin-view").classList.toggle("hidden", !supabaseEnabled() || !isLoggedIn());
+  }
+
+  async function login(email, password) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.msg || "Đăng nhập thất bại");
+    sessionStorage.setItem("hp_admin_token", data.access_token);
+  }
+
+  async function loadCategories() {
+    categories = await sbFetch("categories?select=*&order=id.asc");
+    const select = document.querySelector('select[name="category_id"]');
+    select.innerHTML = categories.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
+  }
+
+  async function loadAdminProducts() {
+    const rows = await sbFetch("products?select=*,category:categories(name)&order=id.asc");
+    document.getElementById("product-tbody").innerHTML = rows
+      .map(
+        (p) => `
+        <tr>
+          <td><img src="${p.image_url}" alt=""></td>
+          <td>${p.name}</td>
+          <td>${p.category ? p.category.name : ""}</td>
+          <td>${formatVND(p.price)}</td>
+          <td>${p.stock}</td>
+          <td class="admin-actions">
+            <button class="btn btn-outline btn-sm" onclick='openEdit(${JSON.stringify(p)})'>Sửa</button>
+            <button class="btn btn-primary btn-sm" style="background:var(--red)" onclick="deleteProduct(${p.id})">Xóa</button>
+          </td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+
+  async function loadOrders() {
+    const rows = await sbFetch(
+      "orders?select=*,order_items(quantity,price_at_order,product:products(name))&order=created_at.desc"
+    );
+    document.getElementById("orders-tbody").innerHTML = rows
+      .map(
+        (o) => `
+        <tr>
+          <td>#${o.id}</td>
+          <td>${o.customer_name}</td>
+          <td>${o.phone}</td>
+          <td>${o.address}${o.note ? `<br><em>${o.note}</em>` : ""}</td>
+          <td>
+            <ul class="order-items-list">
+              ${o.order_items
+                .map((it) => `<li>${it.product ? it.product.name : "?"} x${it.quantity}</li>`)
+                .join("")}
+            </ul>
+          </td>
+          <td>${formatVND(o.total)}</td>
+          <td>
+            <select class="status-select" onchange="updateOrderStatus(${o.id}, this.value)">
+              ${["pending", "processing", "completed", "cancelled"]
+                .map(
+                  (s) =>
+                    `<option value="${s}" ${s === o.status ? "selected" : ""}>${
+                      { pending: "Chờ xử lý", processing: "Đang xử lý", completed: "Hoàn tất", cancelled: "Đã hủy" }[s]
+                    }</option>`
+                )
+                .join("")}
+            </select>
+          </td>
+          <td>${new Date(o.created_at).toLocaleString("vi-VN")}</td>
+        </tr>
+      `
+      )
+      .join("") || `<tr><td colspan="7">Chưa có đơn hàng nào.</td></tr>`;
+  }
+
+  async function updateOrderStatus(id, status) {
+    try {
+      await sbFetch(`orders?id=eq.${id}`, { method: "PATCH", body: JSON.stringify({ status }) });
+    } catch (e) {
+      document.getElementById("admin-error").textContent = e.message;
+    }
+  }
+
+  async function loadMessages() {
+    const rows = await sbFetch("contact_messages?select=*&order=created_at.desc");
+    document.getElementById("messages-tbody").innerHTML = rows
+      .map(
+        (m) => `
+        <tr>
+          <td>${m.name}</td>
+          <td>${m.email}</td>
+          <td class="msg-cell">${m.message}</td>
+          <td>${new Date(m.created_at).toLocaleString("vi-VN")}</td>
+        </tr>
+      `
+      )
+      .join("") || `<tr><td colspan="4">Chưa có tin nhắn nào.</td></tr>`;
+  }
+
+  async function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll(".admin-tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+    ["products", "orders", "messages"].forEach((t) =>
+      document.getElementById(`panel-${t}`).classList.toggle("hidden", t !== tab)
+    );
+    document.getElementById("btn-add").classList.toggle("hidden", tab !== "products");
+    document.getElementById("panel-subtitle").textContent = tabSubtitles[tab];
+    document.getElementById("admin-error").textContent = "";
+
+    if (tabLoaded[tab]) return;
+    try {
+      if (tab === "products") await loadAdminProducts();
+      if (tab === "orders") await loadOrders();
+      if (tab === "messages") await loadMessages();
+      tabLoaded[tab] = true;
+    } catch (e) {
+      document.getElementById("admin-error").textContent = e.message;
+    }
+  }
+
+  document.querySelectorAll(".admin-tabs button").forEach((btn) => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  function openModal(title) {
+    document.getElementById("modal-title").textContent = title;
+    document.getElementById("modal-backdrop").classList.remove("hidden");
+    document.getElementById("form-error").textContent = "";
+  }
+  function closeModal() {
+    document.getElementById("modal-backdrop").classList.add("hidden");
+    document.getElementById("product-form").reset();
+    editingId = null;
+  }
+
+  function openAdd() {
+    editingId = null;
+    openModal("Thêm sản phẩm");
+  }
+
+  function openEdit(p) {
+    editingId = p.id;
+    openModal("Sửa sản phẩm");
+    const form = document.getElementById("product-form");
+    form.name.value = p.name;
+    form.category_id.value = p.category_id;
+    form.price.value = p.price;
+    form.image_url.value = p.image_url;
+    form.stock.value = p.stock;
+  }
+
+  async function deleteProduct(id) {
+    if (!confirm("Xóa sản phẩm này?")) return;
+    try {
+      await sbFetch(`products?id=eq.${id}`, { method: "DELETE" });
+      await loadAdminProducts();
+    } catch (e) {
+      document.getElementById("admin-error").textContent = e.message;
+    }
+  }
+
+  document.getElementById("btn-add").addEventListener("click", openAdd);
+  document.getElementById("btn-cancel").addEventListener("click", closeModal);
+  document.getElementById("btn-logout").addEventListener("click", () => {
+    sessionStorage.removeItem("hp_admin_token");
+    showView();
+  });
+
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    try {
+      await login(form.get("email"), form.get("password"));
+      showView();
+      await init();
+    } catch (err) {
+      document.getElementById("login-error").textContent = err.message;
+    }
+  });
+
+  document.getElementById("product-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const name = form.get("name");
+    const payload = {
+      name,
+      slug: `${slugify(name)}-${editingId || Date.now()}`,
+      category_id: parseInt(form.get("category_id"), 10),
+      price: parseInt(form.get("price"), 10),
+      image_url: form.get("image_url"),
+      stock: parseInt(form.get("stock") || "0", 10),
+    };
+    try {
+      if (editingId) {
+        delete payload.slug;
+        await sbFetch(`products?id=eq.${editingId}`, { method: "PATCH", body: JSON.stringify(payload) });
+      } else {
+        await sbFetch("products", { method: "POST", body: JSON.stringify(payload) });
+      }
+      closeModal();
+      await loadAdminProducts();
+    } catch (err) {
+      document.getElementById("form-error").textContent = err.message;
+    }
+  });
+
+  async function init() {
+    if (!supabaseEnabled() || !isLoggedIn()) return;
+    try {
+      await loadCategories();
+      tabLoaded.products = tabLoaded.orders = tabLoaded.messages = false;
+      await switchTab("products");
+    } catch (e) {
+      document.getElementById("admin-error").textContent = e.message;
+    }
+  }
+
+  showView();
+  init();
+</script>

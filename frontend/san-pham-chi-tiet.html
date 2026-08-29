@@ -1,0 +1,123 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chi tiết sản phẩm — Hồng Phước</title>
+<meta name="description" content="Chi tiết sản phẩm thể thao tại cửa hàng Hồng Phước.">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<style>
+  .detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .detail-img { border-radius: 16px; overflow: hidden; background: #eee; aspect-ratio: 1/1; }
+  .detail-img img { width: 100%; height: 100%; object-fit: cover; }
+  .size-options { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 18px; }
+  .size-options button {
+    padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: #fff;
+    font-weight: 600; cursor: pointer; font-size: 0.85rem;
+  }
+  .size-options button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .qty-box { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .qty-box button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-size: 1.1rem; cursor: pointer; }
+  .stock-badge { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+  .stock-ok { color: var(--green); }
+  .stock-low { color: #d97706; }
+  .stock-out { color: var(--red); }
+  @media (max-width: 800px) { .detail-layout { grid-template-columns: 1fr; } }
+</style>
+
+<div id="header"></div>
+
+<div class="page" id="detail-root">
+  <p>Đang tải sản phẩm...</p>
+</div>
+
+<div id="footer"></div>
+
+<script src="js/app.js"></script>
+<script>
+  renderHeader("san-pham.html");
+  renderFooter();
+
+  const params = new URLSearchParams(location.search);
+  const productId = parseInt(params.get("id"), 10);
+  let selectedSize = "M";
+  let qty = 1;
+
+  function stockInfo(stock) {
+    if (stock <= 0) return { text: "Hết hàng", cls: "stock-out" };
+    if (stock <= 10) return { text: `Sắp hết hàng (còn ${stock})`, cls: "stock-low" };
+    return { text: `Còn hàng (${stock} sản phẩm)`, cls: "stock-ok" };
+  }
+
+  loadProducts().then((products) => {
+    const p = products.find((x) => x.id === productId);
+    const root = document.getElementById("detail-root");
+
+    if (!p) {
+      root.innerHTML = `<p>Không tìm thấy sản phẩm. <a href="san-pham.html">Quay lại danh sách sản phẩm</a></p>`;
+      return;
+    }
+
+    document.title = `${p.name} — Hồng Phước`;
+    const stock = p.stock ?? 100;
+    const info = stockInfo(stock);
+
+    root.innerHTML = `
+      <div class="detail-layout">
+        <div class="detail-img"><img src="${p.image}" alt="${p.name}"></div>
+        <div>
+          <span class="tag">${p.category.toUpperCase()}</span>
+          <h1 class="page-title" style="margin-top:8px;">${p.name}</h1>
+          <div class="price" style="font-size:1.5rem; margin-bottom:14px;">${formatVND(p.price)}</div>
+          <div class="stock-badge ${info.cls}">${info.text}</div>
+
+          <div>
+            <label style="font-weight:600; font-size:0.9rem;">Chọn size</label>
+            <div class="size-options" id="size-options">
+              ${["S", "M", "L", "XL", "XXL"].map((s) => `<button data-size="${s}" class="${s === selectedSize ? "active" : ""}">${s}</button>`).join("")}
+            </div>
+          </div>
+
+          <div>
+            <label style="font-weight:600; font-size:0.9rem;">Số lượng</label>
+            <div class="qty-box">
+              <button id="qty-minus">−</button>
+              <span id="qty-display" style="min-width:24px; text-align:center;">1</span>
+              <button id="qty-plus">+</button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="add-btn" ${stock <= 0 ? "disabled" : ""}>
+            ${stock <= 0 ? "Hết hàng" : "Thêm vào giỏ hàng"}
+          </button>
+
+          <p style="color:var(--muted); font-size:0.85rem; margin-top:20px;">
+            ${p.description || "Sản phẩm thuộc bộ sưu tập đồ thể thao Hồng Phước. Liên hệ cửa hàng nếu cần tư vấn thêm về chất liệu hoặc size."}
+          </p>
+          <p style="color:var(--muted); font-size:0.78rem;">
+            * Lựa chọn size hiện chỉ mang tính tham khảo, cửa hàng chưa quản lý tồn kho riêng theo từng size.
+          </p>
+        </div>
+      </div>
+    `;
+
+    document.querySelectorAll("#size-options button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedSize = btn.dataset.size;
+        document.querySelectorAll("#size-options button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    document.getElementById("qty-minus").addEventListener("click", () => {
+      qty = Math.max(1, qty - 1);
+      document.getElementById("qty-display").textContent = qty;
+    });
+    document.getElementById("qty-plus").addEventListener("click", () => {
+      qty = Math.min(stock, qty + 1);
+      document.getElementById("qty-display").textContent = qty;
+    });
+
+    document.getElementById("add-btn")?.addEventListener("click", () => {
+      addToCart(p.id, qty, stock);
+    });
+  });
+</script>

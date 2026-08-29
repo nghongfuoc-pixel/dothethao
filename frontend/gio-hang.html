@@ -1,0 +1,80 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giỏ hàng — Hồng Phước</title>
+<meta name="description" content="Giỏ hàng của bạn tại Hồng Phước - kiểm tra sản phẩm đã chọn trước khi thanh toán.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+<div id="header"></div>
+
+<div class="page">
+  <h1 class="page-title">Giỏ hàng</h1>
+  <div id="cart-content"></div>
+</div>
+
+<div id="footer"></div>
+
+<script src="js/app.js"></script>
+<script>
+  renderHeader("gio-hang.html");
+  renderFooter();
+
+  function rowHtml(line, product) {
+    const subtotal = product.price * line.qty;
+    const stock = product.stock ?? 100;
+    return `
+      <tr>
+        <td>
+          <div class="cart-row-img">
+            <img src="${product.image}" alt="${product.name}">
+            <span>${product.name}</span>
+          </div>
+        </td>
+        <td>${formatVND(product.price)}</td>
+        <td>
+          <input type="number" min="1" max="${stock}" value="${line.qty}" class="qty-input"
+                 onchange="updateCartQty(${product.id}, parseInt(this.value)||1, ${stock}); renderCart();">
+        </td>
+        <td>${formatVND(subtotal)}</td>
+        <td><button class="remove-link" onclick="removeFromCart(${product.id}); renderCart();">Xóa</button></td>
+      </tr>
+    `;
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById("cart-content");
+
+    if (cart.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <p>Giỏ hàng đang trống.</p>
+          <a href="san-pham.html" class="btn btn-primary">Chọn sản phẩm</a>
+        </div>
+      `;
+      return;
+    }
+
+    loadProducts().then((products) => {
+      const map = Object.fromEntries(products.map((p) => [p.id, p]));
+      const rows = cart.map((line) => rowHtml(line, map[line.productId])).join("");
+      const total = cart.reduce((sum, l) => sum + map[l.productId].price * l.qty, 0);
+
+      container.innerHTML = `
+        <table class="cart-table">
+          <thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="cart-summary">
+          <div class="cart-summary-box">
+            <div class="cart-summary-row"><span>Tổng tiền</span><span class="cart-summary-total">${formatVND(total)}</span></div>
+            <a href="thanh-toan.html" class="btn btn-primary btn-block">Tiến hành thanh toán</a>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  renderCart();
+</script>

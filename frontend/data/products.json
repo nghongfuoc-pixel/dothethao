@@ -1,0 +1,252 @@
+[
+  {
+    "id": 1,
+    "name": "Áo thun nam ngắn tay lụa băng",
+    "slug": "ao-thun-nam-ngan-tay-lua-bang-1",
+    "price": 473000,
+    "image": "assets/products/sp1.jpg",
+    "stock": 100,
+    "category": "Áo thể thao",
+    "categorySlug": "ao-the-thao"
+  },
+  {
+    "id": 2,
+    "name": "Áo thun nam thể thao",
+    "slug": "ao-thun-nam-the-thao-2",
+    "price": 1182800,
+    "image": "assets/products/sp2.jpg",
+    "stock": 100,
+    "category": "Áo thể thao",
+    "categorySlug": "ao-the-thao"
+  },
+  {
+    "id": 3,
+    "name": "Áo thể thao chạy bộ nhanh khô",
+    "slug": "ao-the-thao-chay-bo-nhanh-kho-3",
+    "price": 1182800,
+    "image": "assets/products/sp3.jpg",
+    "stock": 100,
+    "category": "Áo thể thao",
+    "categorySlug": "ao-the-thao"
+  },
+  {
+    "id": 4,
+    "name": "Áo phông nhanh khô áo chạy bộ tập luyện",
+    "slug": "ao-phong-nhanh-kho-ao-chay-bo-tap-luyen-4",
+    "price": 473000,
+    "image": "assets/products/sp4.jpg",
+    "stock": 100,
+    "category": "Áo thể thao",
+    "categorySlug": "ao-the-thao"
+  },
+  {
+    "id": 5,
+    "name": "Áo phông thể thao",
+    "slug": "ao-phong-the-thao-5",
+    "price": 1237000,
+    "image": "assets/products/sp5.jpg",
+    "stock": 100,
+    "category": "Áo thể thao",
+    "categorySlug": "ao-the-thao"
+  },
+  {
+    "id": 6,
+    "name": "Bộ thể thao mùa hè mỏng",
+    "slug": "bo-the-thao-mua-he-mong-6",
+    "price": 1260000,
+    "image": "assets/products/sp6.jpg",
+    "stock": 100,
+    "category": "Đồ bộ",
+    "categorySlug": "do-bo"
+  },
+  {
+    "id": 7,
+    "name": "Bộ vest nhanh khô quần áo thể thao",
+    "slug": "bo-vest-nhanh-kho-quan-ao-the-thao-7",
+    "price": 1260000,
+    "image": "assets/products/sp7.jpg",
+    "stock": 100,
+    "category": "Đồ bộ",
+    "categorySlug": "do-bo"
+  },
+  {
+    "id": 8,
+    "name": "Bộ đồ thể thao nam size lớn",
+    "slug": "bo-do-the-thao-nam-size-lon-8",
+    "price": 1300000,
+    "image": "assets/products/sp8.jpg",
+    "stock": 100,
+    "category": "Đồ bộ",
+    "categorySlug": "do-bo"
+  },
+  {
+    "id": 9,
+    "name": "Bộ đồ thể thao nhanh khô cảm",
+    "slug": "bo-do-the-thao-nhanh-kho-cam-9",
+    "price": 1260000,
+    "image": "assets/products/sp9.jpg",
+    "stock": 100,
+    "category": "Đồ bộ",
+    "categorySlug": "do-bo"
+  },
+  {
+    "id": 10,
+    "name": "Bộ đồ thể thao nam hai mảnh áo phông cổ tròn",
+    "slug": "bo-do-the-thao-nam-hai-manh-ao-phong-co-tron-10",
+    "price": 1300000,
+    "image": "assets/products/sp10.jpg",
+    "stock": 100,
+    "category": "Đồ bộ",
+    "categorySlug": "do-bo"
+  },
+  {
+    "id": 11,
+    "name": "Đồ bơi liền thân trẻ em",
+    "slug": "do-boi-lien-than-tre-em-11",
+    "price": 3309000,
+    "image": "assets/products/sp11.jpg",
+    "stock": 100,
+    "category": "Đồ bơi",
+    "categorySlug": "do-boi"
+  },
+  {
+    "id": 12,
+    "name": "Quần bơi trẻ em boxer",
+    "slug": "quan-boi-tre-em-boxer-12",
+    "price": 1418000,
+    "image": "assets/products/sp12.jpg",
+    "stock": 100,
+    "category": "Đồ bơi",
+    "categorySlug": "do-boi"
+  },
+  {
+    "id": 13,
+    "name": "Ván nổi thông minh Asiwo dành cho người lớn",
+    "slug": "van-noi-thong-minh-asiwo-danh-cho-nguoi-lon-13",
+    "price": 949200,
+    "image": "assets/products/sp13.jpg",
+    "stock": 100,
+    "category": "Đồ bơi",
+    "categorySlug": "do-boi"
+  },
+  {
+    "id": 14,
+    "name": "Chân chèo bơi TOSWIM",
+    "slug": "chan-cheo-boi-toswim-14",
+    "price": 1403000,
+    "image": "assets/products/sp14.jpg",
+    "stock": 100,
+    "category": "Đồ bơi",
+    "categorySlug": "do-boi"
+  },
+  {
+    "id": 15,
+    "name": "Kính bơi trẻ em",
+    "slug": "kinh-boi-tre-em-15",
+    "price": 1971000,
+    "image": "assets/products/sp15.jpg",
+    "stock": 100,
+    "category": "Đồ bơi",
+    "categorySlug": "do-boi"
+  },
+  {
+    "id": 16,
+    "name": "Áo ba lỗ thể thao nam kiểu Mỹ",
+    "slug": "ao-ba-lo-the-thao-nam-kieu-my-16",
+    "price": 1222000,
+    "image": "assets/products/sp16.jpg",
+    "stock": 100,
+    "category": "Áo ba lỗ",
+    "categorySlug": "ao-ba-lo"
+  },
+  {
+    "id": 17,
+    "name": "Áo vest nam mùa hè thoáng khí lụa băng",
+    "slug": "ao-vest-nam-mua-he-thoang-khi-lua-bang-17",
+    "price": 473000,
+    "image": "assets/products/sp17.jpg",
+    "stock": 100,
+    "category": "Áo ba lỗ",
+    "categorySlug": "ao-ba-lo"
+  },
+  {
+    "id": 18,
+    "name": "Áo ba lỗ thể thao chạy bộ",
+    "slug": "ao-ba-lo-the-thao-chay-bo-18",
+    "price": 1024000,
+    "image": "assets/products/sp18.jpg",
+    "stock": 100,
+    "category": "Áo ba lỗ",
+    "categorySlug": "ao-ba-lo"
+  },
+  {
+    "id": 19,
+    "name": "Áo gile thể thao nam mùa hè",
+    "slug": "ao-gile-the-thao-nam-mua-he-19",
+    "price": 2285000,
+    "image": "assets/products/sp19.jpg",
+    "stock": 100,
+    "category": "Áo ba lỗ",
+    "categorySlug": "ao-ba-lo"
+  },
+  {
+    "id": 20,
+    "name": "Áo vest nam mùa hè mới",
+    "slug": "ao-vest-nam-mua-he-moi-20",
+    "price": 1221000,
+    "image": "assets/products/sp20.jpg",
+    "stock": 100,
+    "category": "Áo ba lỗ",
+    "categorySlug": "ao-ba-lo"
+  },
+  {
+    "id": 21,
+    "name": "Quần jogger ống rộng",
+    "slug": "quan-jogger-ong-rong-21",
+    "price": 1812000,
+    "image": "assets/products/sp21.jpg",
+    "stock": 100,
+    "category": "Quần thể thao",
+    "categorySlug": "quan-the-thao"
+  },
+  {
+    "id": 22,
+    "name": "Quần chín phân thể thao điền kinh",
+    "slug": "quan-chin-phan-the-thao-dien-kinh-22",
+    "price": 1418000,
+    "image": "assets/products/sp22.jpg",
+    "stock": 100,
+    "category": "Quần thể thao",
+    "categorySlug": "quan-the-thao"
+  },
+  {
+    "id": 23,
+    "name": "Quần short thể thao mùa hè",
+    "slug": "quan-short-the-thao-mua-he-23",
+    "price": 1826000,
+    "image": "assets/products/sp23.jpg",
+    "stock": 100,
+    "category": "Quần thể thao",
+    "categorySlug": "quan-the-thao"
+  },
+  {
+    "id": 24,
+    "name": "Quần ba phần tư lụa băng siêu mỏng",
+    "slug": "quan-ba-phan-tu-lua-bang-sieu-mong-24",
+    "price": 913000,
+    "image": "assets/products/sp24.jpg",
+    "stock": 100,
+    "category": "Quần thể thao",
+    "categorySlug": "quan-the-thao"
+  },
+  {
+    "id": 25,
+    "name": "Lulu Nhanh Khô Quần Chạy Bộ Huấn Luyện",
+    "slug": "lulu-nhanh-kho-quan-chay-bo-huan-luyen-25",
+    "price": 2407000,
+    "image": "assets/products/sp25.jpg",
+    "stock": 100,
+    "category": "Quần thể thao",
+    "categorySlug": "quan-the-thao"
+  }
+]
