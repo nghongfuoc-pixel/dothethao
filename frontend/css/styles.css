@@ -33,6 +33,9 @@ header.site-header {
   padding: 14px 32px;
   flex-wrap: wrap;
   gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
 }
 
 .brand {
@@ -95,10 +98,6 @@ nav.main-nav {
   nav.main-nav a {
     padding: 12px 14px;
     border-radius: 8px;
-  }
-
-  header.site-header {
-    position: relative;
   }
 }
 
