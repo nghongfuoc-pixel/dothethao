@@ -12,8 +12,8 @@ const STORE = {
 
 // Điền 2 giá trị này khi đã tạo project Supabase (Project Settings > API).
 // Để trống thì toàn bộ site vẫn chạy bình thường với dữ liệu tĩnh data/products.json.
-const SUPABASE_URL = "";
-const SUPABASE_ANON_KEY = "";
+const SUPABASE_URL = "https://mbrvmqwvsbcnznjbtbac.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_TZ2ChpTUQm1K-Z2rYc81Vw_UEquUAMg";
 
 function supabaseEnabled() {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
