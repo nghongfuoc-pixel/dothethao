@@ -34,8 +34,9 @@ function initAnalytics() {
   gtag("config", GA_MEASUREMENT_ID);
 }
 
-async function sbFetch(path, options = {}) {
-  const token = sessionStorage.getItem("hp_admin_token") || SUPABASE_ANON_KEY;
+async function sbFetch(path, options = {}, _retried = false) {
+  const storedToken = sessionStorage.getItem("hp_admin_token");
+  const token = storedToken || SUPABASE_ANON_KEY;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
     headers: {
@@ -47,6 +48,11 @@ async function sbFetch(path, options = {}) {
   });
   const text = await res.text();
   if (!res.ok) {
+    const expired = storedToken && !_retried && (res.status === 401 || text.includes("JWT expired"));
+    if (expired) {
+      sessionStorage.removeItem("hp_admin_token");
+      return sbFetch(path, options, true);
+    }
     throw new Error(text || `Lỗi Supabase (${res.status})`);
   }
   return text ? JSON.parse(text) : null;
