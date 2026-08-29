@@ -14,6 +14,7 @@
 
 body {
   margin: 0;
+  padding-top: var(--header-height, 68px);
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -33,8 +34,10 @@ header.site-header {
   padding: 14px 32px;
   flex-wrap: wrap;
   gap: 12px;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 200;
 }
 
@@ -283,7 +286,9 @@ nav.main-nav a:hover {
 .form-group input, .form-group textarea {
   width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit;
 }
-.order-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.order-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.order-line span:first-child { flex: 1; min-width: 0; }
+.order-line span:last-child { white-space: nowrap; flex-shrink: 0; }
 
 @media (max-width: 800px) {
   .checkout-layout { grid-template-columns: 1fr; }

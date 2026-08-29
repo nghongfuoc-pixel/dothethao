@@ -197,6 +197,13 @@ function renderHeader(active) {
   document.getElementById("nav-toggle").addEventListener("click", () => {
     document.getElementById("main-nav").classList.toggle("open");
   });
+
+  function syncHeaderHeight() {
+    const h = document.querySelector("header.site-header").offsetHeight;
+    document.documentElement.style.setProperty("--header-height", h + "px");
+  }
+  syncHeaderHeight();
+  window.addEventListener("resize", syncHeaderHeight);
 }
 
 function renderFooter() {
