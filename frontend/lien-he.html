@@ -80,22 +80,40 @@
   document.getElementById("map-frame").src =
     "https://www.google.com/maps?q=" + encodeURIComponent(STORE.mapsQuery) + "&output=embed";
 
-  document.getElementById("contact-form").addEventListener("submit", (e) => {
+  document.getElementById("contact-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const message = {
-      name: form.get("name"),
-      email: form.get("email"),
-      message: form.get("message"),
-      createdAt: new Date().toISOString(),
-    };
+    const submitBtn = e.target.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
 
-    // TODO: khi đã có Supabase, thay đoạn này bằng:
-    // await supabase.from('contact_messages').insert({...})
-    const messages = JSON.parse(localStorage.getItem("hp_messages") || "[]");
-    messages.push(message);
-    localStorage.setItem("hp_messages", JSON.stringify(messages));
+    try {
+      if (supabaseEnabled()) {
+        await sbFetch("contact_messages", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.get("name"),
+            email: form.get("email"),
+            message: form.get("message"),
+          }),
+        });
+      } else {
+        const message = {
+          name: form.get("name"),
+          email: form.get("email"),
+          message: form.get("message"),
+          createdAt: new Date().toISOString(),
+        };
+        const messages = JSON.parse(localStorage.getItem("hp_messages") || "[]");
+        messages.push(message);
+        localStorage.setItem("hp_messages", JSON.stringify(messages));
+      }
+    } catch (err) {
+      submitBtn.disabled = false;
+      showToast("Có lỗi khi gửi liên hệ, vui lòng thử lại: " + err.message);
+      return;
+    }
 
+    submitBtn.disabled = false;
     e.target.reset();
     showToast("Cảm ơn bạn! Chúng tôi sẽ phản hồi sớm.");
   });

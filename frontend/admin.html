@@ -154,7 +154,6 @@
   let categories = [];
   let editingId = null;
   let currentTab = "products";
-  const tabLoaded = { products: false, orders: false, messages: false };
 
   const tabSubtitles = {
     products: "Thêm, sửa, xóa sản phẩm — thay đổi có hiệu lực ngay trên trang Sản phẩm.",
@@ -293,12 +292,10 @@
     document.getElementById("panel-subtitle").textContent = tabSubtitles[tab];
     document.getElementById("admin-error").textContent = "";
 
-    if (tabLoaded[tab]) return;
     try {
       if (tab === "products") await loadAdminProducts();
       if (tab === "orders") await loadOrders();
       if (tab === "messages") await loadMessages();
-      tabLoaded[tab] = true;
     } catch (e) {
       document.getElementById("admin-error").textContent = e.message;
     }
@@ -394,7 +391,6 @@
     if (!supabaseEnabled() || !isLoggedIn()) return;
     try {
       await loadCategories();
-      tabLoaded.products = tabLoaded.orders = tabLoaded.messages = false;
       await switchTab("products");
     } catch (e) {
       document.getElementById("admin-error").textContent = e.message;

@@ -73,26 +73,53 @@
     document.getElementById("order-total").textContent = formatVND(total);
   });
 
-  document.getElementById("checkout-form").addEventListener("submit", (e) => {
+  document.getElementById("checkout-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const order = {
-      customerName: form.get("name"),
-      phone: form.get("phone"),
-      address: form.get("address"),
-      note: form.get("note"),
-      items: getCart(),
-      createdAt: new Date().toISOString(),
-    };
+    const cartNow = getCart();
+    const products = await loadProducts();
+    const map = Object.fromEntries(products.map((p) => [p.id, p]));
+    const total = cartNow.reduce((sum, l) => sum + map[l.productId].price * l.qty, 0);
+    const submitBtn = e.target.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
 
-    // TODO: khi đã có Supabase, thay đoạn này bằng:
-    // await supabase.from('orders').insert({...}) rồi insert order_items tương ứng.
-    const orders = JSON.parse(localStorage.getItem("hp_orders") || "[]");
-    orders.push(order);
-    localStorage.setItem("hp_orders", JSON.stringify(orders));
+    try {
+      if (supabaseEnabled()) {
+        await sbFetch("rpc/create_order", {
+          method: "POST",
+          body: JSON.stringify({
+            p_customer_name: form.get("name"),
+            p_phone: form.get("phone"),
+            p_address: form.get("address"),
+            p_note: form.get("note") || null,
+            p_total: total,
+            p_items: cartNow.map((l) => ({
+              product_id: l.productId,
+              quantity: l.qty,
+              price_at_order: map[l.productId].price,
+            })),
+          }),
+        });
+      } else {
+        const order = {
+          customerName: form.get("name"),
+          phone: form.get("phone"),
+          address: form.get("address"),
+          note: form.get("note"),
+          items: cartNow,
+          createdAt: new Date().toISOString(),
+        };
+        const orders = JSON.parse(localStorage.getItem("hp_orders") || "[]");
+        orders.push(order);
+        localStorage.setItem("hp_orders", JSON.stringify(orders));
+      }
 
-    localStorage.removeItem("hp_cart");
-    showToast("Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.");
-    setTimeout(() => (window.location.href = "index.html"), 1500);
+      localStorage.removeItem("hp_cart");
+      showToast("Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.");
+      setTimeout(() => (window.location.href = "index.html"), 1500);
+    } catch (err) {
+      submitBtn.disabled = false;
+      showToast("Có lỗi khi đặt hàng, vui lòng thử lại: " + err.message);
+    }
   });
 </script>

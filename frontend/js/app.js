@@ -12,8 +12,8 @@ const STORE = {
 
 // Điền 2 giá trị này khi đã tạo project Supabase (Project Settings > API).
 // Để trống thì toàn bộ site vẫn chạy bình thường với dữ liệu tĩnh data/products.json.
-const SUPABASE_URL = "";
-const SUPABASE_ANON_KEY = "";
+const SUPABASE_URL = "https://mbrvmqwvsbcnznjbtbac.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_TZ2ChpTUQm1K-Z2rYc81Vw_UEquUAMg";
 
 function supabaseEnabled() {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
@@ -45,11 +45,11 @@ async function sbFetch(path, options = {}) {
       ...(options.headers || {}),
     },
   });
+  const text = await res.text();
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err || `Lỗi Supabase (${res.status})`);
+    throw new Error(text || `Lỗi Supabase (${res.status})`);
   }
-  return res.status === 204 ? null : res.json();
+  return text ? JSON.parse(text) : null;
 }
 
 const CART_KEY = "hp_cart";
