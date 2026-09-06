@@ -1,0 +1,59 @@
+Câu 1: Lệnh nào dùng để tải một repository từ GitHub về máy?
+B) git clone
+
+Câu 2: Pull Request (PR) thường được sử dụng để làm gì?
+A) Đưa các thay đổi vào một branch khác
+
+Câu 3: Branch vừa có commit mới từ nơi khác. Lệnh nào dùng để refresh lại branch?
+D) git fetch
+
+Câu 4: Cronjob dùng để làm gì?
+D) Tự động chạy một lệnh theo lịch định sẵn
+
+Câu 5: Supabase.com sử dụng database gì?
+C) PostgreSQL
+
+Câu 6: Thẻ <iframe> là gì?
+B) Nhúng một trang web khác vào web của mình
+
+Câu 7: API key là gì?
+C) Một chuỗi ký tự được mã hóa để xác thực ứng dụng khi gọi API
+
+Câu 8: Chọn câu sai: Cách mô tả lỗi cho AI
+A) Chỉ mô tả vấn đề: Problem
+
+Câu 9: khi dùng Antigravity tạo project mới cho một folder đã tồn tại, prompt đầu tiên là gì?
+D) "Hãy đọc toàn bộ code của project này"
+
+Câu 10: Làm sao để Cloudflare Page nhận source?
+A) Kết nối với GitHub repo
+
+Câu 11: Quy trình 3 bước của Workflow Prompting theo đúng thứ tự là gì?
+B) Phân tích -> Thiết kế -> Kiểm soát
+
+Câu 12: Kỹ thuật Step-back Prompting trong Prompt Engineering có nghĩa là gì?
+B) Lùi lại để đặt câu hỏi ở góc nhìn tổng quát, khái quát hơn trước khi đi vào chi tiết
+
+Câu 13: Điểm khác biệt căn bản giữa Vibe Coding và lập trình truyền thống là gì?
+B) Vibe Coding tập trung vào ý tưởng và mô tả bằng ngôn ngữ tự nhiên, không cần viết code đúng cú pháp
+
+Câu 14: Conflict trong Github là gì?
+C) Code của 2 branch chỉnh sửa tại cùng vị trí.
+
+Câu 15: Đặc điểm nào dưới đây mô tả đúng nhất về web tĩnh (static website)?
+C) Không lưu trạng thái, mỗi lần tải lại trang thì dữ liệu nhập sẽ mất
+
+Câu 16: Meta Prompting là kỹ thuật gì trong Prompt Engineering?
+B) Dùng AI để tạo ra hoặc cải thiện prompt cho AI khác (hoặc cho chính nó)
+
+Câu 17: Khi sử dụng Vibe Coding, người dùng nên làm gì sau khi AI tạo ra code?
+C) Kiểm tra, chạy thử và sửa lỗi nếu cần
+
+Câu 18: NotebookLM hỗ trợ những định dạng tài liệu nguồn nào?
+A) PDF và Google Docs
+
+Câu 19: NotebookLM có thể tạo ra những loại đầu ra nào?
+B) Audio/Video overview, mind map, báo cáo, flashcards, quiz, inforgraphic, bảng dữ liệu
+
+Câu 20: GitHub Copilot là công cụ hỗ trợ gì?
+B) Hỗ trợ lập trình bằng AI
