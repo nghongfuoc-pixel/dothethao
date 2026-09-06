@@ -2,6 +2,9 @@
 
 Website bán quần áo thể thao. Frontend tĩnh (HTML/CSS/JS thuần, không build step), backend là Supabase (Postgres + Auth), deploy qua GitHub Pages.
 
+- **Demo:** https://nghongfuoc-pixel.github.io/dothethao/
+- **Supabase dashboard:** https://supabase.com/dashboard/project/mbrvmqwvsbcnznjbtbac
+
 ## Tech stack
 
 | Thành phần | Công nghệ |
@@ -16,7 +19,9 @@ Website bán quần áo thể thao. Frontend tĩnh (HTML/CSS/JS thuần, không 
 
 ## Trạng thái dự án
 
-Đã hoàn thiện giao diện đầy đủ 9 trang (trang chủ, giới thiệu, sản phẩm, chi tiết sản phẩm, giỏ hàng, thanh toán, liên hệ, chính sách, quản trị) và schema Supabase sẵn sàng. **Chưa kết nối Supabase thật** — `SUPABASE_URL`/`SUPABASE_ANON_KEY` trong `frontend/js/app.js` đang để trống, nên đơn hàng/tin nhắn liên hệ hiện chỉ lưu tạm ở `localStorage` trình duyệt khách. Xem [ARCHITECTURE.md](ARCHITECTURE.md) để biết cách kích hoạt Supabase.
+Đã hoàn thiện giao diện đầy đủ 9 trang (trang chủ, giới thiệu, sản phẩm, chi tiết sản phẩm, giỏ hàng, thanh toán, liên hệ, chính sách, quản trị) và **đã kết nối Supabase thật lên production**: `SUPABASE_URL`/`SUPABASE_ANON_KEY` trong `frontend/js/app.js` đã được điền, schema đã chạy và đã seed dữ liệu (nhóm hàng, sản phẩm) — site đang đọc dữ liệu thật qua REST API thay vì `localStorage`. Bảng `orders`/liên hệ đã sẵn sàng nhận dữ liệu nhưng chưa có đơn hàng thật nào (chưa có khách mua). Xem [ARCHITECTURE.md](ARCHITECTURE.md) để biết chi tiết kiến trúc.
+
+Lưu ý: schema được áp dụng thủ công qua **SQL Editor** của Supabase (chạy trực tiếp [database/supabase_schema.sql](database/supabase_schema.sql)), không qua migration CLI — vì vậy dashboard Supabase sẽ luôn hiện "No migrations". File `.sql` này là nguồn sự thật duy nhất cho schema; nếu cần tái tạo project mới, chạy lại đúng file đó. Project Supabase cũng chưa liên kết GitHub integration ("No repository connected" trên dashboard) — việc deploy code frontend do GitHub Actions/Pages xử lý riêng, không liên quan tới Supabase.
 
 ## Tài liệu
 
@@ -41,7 +46,7 @@ python -m http.server 5500
 
 rồi mở `http://localhost:5500`.
 
-## Cập nhật dữ liệu sản phẩm (lúc chưa kết nối Supabase)
+## Cập nhật dữ liệu sản phẩm (dev local, trước khi đẩy lên Supabase)
 
 ```bash
 # 1. Sửa database/products.csv
@@ -51,14 +56,14 @@ node prisma/seed.js
 # 3. Xuất lại frontend/data/products.json từ SQLite (xem script trong ARCHITECTURE.md)
 ```
 
-## Kết nối Supabase (khi sẵn sàng lên production)
+## Kết nối Supabase (đã thực hiện — giữ lại làm hướng dẫn tái tạo project mới)
 
 1. Tạo project tại [supabase.com](https://supabase.com).
 2. Vào **SQL Editor**, chạy toàn bộ nội dung [database/supabase_schema.sql](database/supabase_schema.sql).
 3. Vào **Authentication → Users → Add user**, tạo 1 tài khoản admin.
 4. Vào **Project Settings → API**, lấy **Project URL** và **anon public key**, điền vào `SUPABASE_URL` / `SUPABASE_ANON_KEY` trong [frontend/js/app.js](frontend/js/app.js).
 
-Sau bước 4, toàn bộ site (sản phẩm, giỏ hàng, thanh toán, liên hệ, quản trị) tự động chuyển sang dùng dữ liệu thật từ Supabase, không cần sửa thêm code.
+Sau bước 4, toàn bộ site (sản phẩm, giỏ hàng, thanh toán, liên hệ, quản trị) tự động chuyển sang dùng dữ liệu thật từ Supabase, không cần sửa thêm code. Project hiện tại (`mbrvmqwvsbcnznjbtbac`) đã qua đủ 4 bước này.
 
 ## Deploy lên GitHub Pages
 
